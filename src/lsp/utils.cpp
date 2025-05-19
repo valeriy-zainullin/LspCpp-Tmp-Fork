@@ -28,11 +28,12 @@
 #else
 #define ENSURE_STRING_MACRO_ARGUMENT(x) x
 #endif
-#include <boost/utility.hpp>
-#include <boost/filesystem/path.hpp>
-#include <boost/filesystem/operations.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/filesystem/directory.hpp>
+
+#include "boost/utility.hpp"
+#include "boost/filesystem/path.hpp"
+#include "boost/filesystem/operations.hpp"
+#include "boost/algorithm/string.hpp"
+#include "boost/filesystem/directory.hpp"
 namespace lsp
 {
 
@@ -505,23 +506,23 @@ lsPosition CharPos(const  std::string& search,
         return result;
 }
 
-void scanDirsUseRecursive(const std::wstring& rootPath, std::vector<std::wstring>& ret)
-{
-        namespace fs = boost::filesystem;
-        fs::path fullpath(rootPath);
-        if (!fs::exists(fullpath)) { return; }
-        fs::recursive_directory_iterator end_iter;
-        for (fs::recursive_directory_iterator iter(fullpath); iter != end_iter; iter++) {
-                try {
-                        if (fs::is_directory(*iter)) {
-                                ret.push_back(iter->path().wstring());
-                        }
-                }
-                catch (const std::exception&) {
-                        continue;
-                }
-        }
-}
+// void scanDirsUseRecursive(const std::wstring& rootPath, std::vector<std::wstring>& ret)
+// {
+//         namespace fs = boost::filesystem;
+//         fs::path fullpath(rootPath);
+//         if (!fs::exists(fullpath)) { return; }
+//         fs::recursive_directory_iterator end_iter;
+//         for (fs::recursive_directory_iterator iter(fullpath); iter != end_iter; iter++) {
+//                 try {
+//                         if (fs::is_directory(*iter)) {
+//                                 ret.push_back(iter->path().wstring());
+//                         }
+//                 }
+//                 catch (const std::exception&) {
+//                         continue;
+//                 }
+//         }
+// }
 
 void scanDirsNoRecursive(const std::wstring& rootPath, std::vector<std::wstring>& ret)
 {

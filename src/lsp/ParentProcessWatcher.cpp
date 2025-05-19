@@ -1,13 +1,13 @@
 #include "LibLsp/lsp/ParentProcessWatcher.h"
 #include <algorithm>
-#include <boost/process.hpp>
+#include "boost/process.hpp"
 
 #ifdef _WIN32
-#include <boost/process/v1/windows.hpp>
+#include "boost/process/v1/windows.hpp"
 #endif
 
-#include <boost/filesystem.hpp>
-#include <boost/asio.hpp>
+#include "boost/filesystem.hpp"
+#include "boost/asio.hpp"
 #include <iostream>
 
 #include "LibLsp/lsp/ProcessIoService.h"
@@ -49,7 +49,7 @@ struct ParentProcessWatcher::ParentProcessWatcherData : std::enable_shared_from_
                 read_from_service = std::make_shared<boost::process::ipstream>();
 
 //              const uint32_t POLL_DELAY_SECS = _poll_delay_secs;
-                auto self(shared_from_this());
+                auto self((shared_from_this()));
                 std::error_code ec;
                 namespace bp = boost::process;
                 c = std::make_shared<bp::child>(asio_io.getIOService(), command,

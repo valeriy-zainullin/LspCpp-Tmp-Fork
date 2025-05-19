@@ -15,8 +15,8 @@
 #include "LibLsp/JsonRpc/stream.h"
 #include <atomic>
 #include <optional>
-#include <boost/asio/thread_pool.hpp>
-#include <boost/asio/post.hpp>
+#include "boost/asio/thread_pool.hpp"
+#include "boost/asio/post.hpp"
 
 #include "LibLsp/JsonRpc/GCThreadContext.h"
 

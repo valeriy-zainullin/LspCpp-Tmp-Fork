@@ -4,7 +4,7 @@
 #include "LibLsp/JsonRpc/TcpServer.h"
 #include <signal.h>
 #include <utility>
-#include <boost/bind/bind.hpp>
+#include "boost/bind/bind.hpp"
 
 #include "LibLsp/JsonRpc/MessageIssue.h"
 #include "LibLsp/JsonRpc/stream.h"

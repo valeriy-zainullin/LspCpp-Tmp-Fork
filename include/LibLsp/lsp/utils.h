@@ -136,6 +136,6 @@ lsPosition CharPos(const std::string& search,
  void scanFilesUseRecursive(const std::string& rootPath, std::vector<std::string>& ret,
     std::string strSuf = "");
 
- void scanDirsUseRecursive(const std::wstring& rootPath, std::vector<std::wstring>& ret);
+//  void scanDirsUseRecursive(const std::wstring& rootPath, std::vector<std::wstring>& ret);
 
 }
