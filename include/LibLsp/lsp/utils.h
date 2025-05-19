@@ -123,7 +123,7 @@ lsPosition CharPos(const std::string& search,
     int character_offset = 0);
 
 
- void scanDirsNoRecursive(const std::wstring& rootPath, std::vector<std::wstring>& ret);
+//  void scanDirsNoRecursive(const std::wstring& rootPath, std::vector<std::wstring>& ret);
 
  void scanFilesUseRecursive(const std::wstring& rootPath, std::vector<std::wstring>& ret,
     std::wstring strSuf = L"");

@@ -1,5 +1,5 @@
-build/
-build_vscode/
+/build/
+/build_vscode/
 
 # Created by https://www.toptal.com/developers/gitignore/api/clion+all,c++,linux,visualstudio,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=clion+all,c++,linux,visualstudio,windows
@@ -208,6 +208,21 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+
+!/boost_*/**/[Dd]ebug/
+!/boost_*/**/[Dd]ebug/**
+!/boost_*/**/[Rr]elease/
+!/boost_*/**/[Rr]elease/**
+!/boost_*/**/x64/
+!/boost_*/**/x64/**
+!/boost_*/**/x86/
+!/boost_*/**/x86/**
+!/boost_*/**/[Ww][Ii][Nn]32/
+!/boost_*/**/[Ww][Ii][Nn]32/**
+!/boost_*/**/[Aa][Rr][Mm]/
+!/boost_*/**/[Aa][Rr][Mm]/**
+!/boost_*/**/[Aa][Rr][Mm]64/
+!/boost_*/**/[Aa][Rr][Mm]64/**
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

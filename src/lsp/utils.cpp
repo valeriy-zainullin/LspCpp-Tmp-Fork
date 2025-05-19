@@ -524,18 +524,18 @@ lsPosition CharPos(const  std::string& search,
 //         }
 // }
 
-void scanDirsNoRecursive(const std::wstring& rootPath, std::vector<std::wstring>& ret)
-{
-        namespace fs = boost::filesystem;
-        boost::filesystem::path myPath(rootPath);
-        if (!fs::exists(rootPath)) { return; }
-        boost::filesystem::directory_iterator endIter;
-        for (boost::filesystem::directory_iterator iter(myPath); iter != endIter; iter++) {
-                if (boost::filesystem::is_directory(*iter)) {
-                        ret.push_back(iter->path().wstring());
-                }
-        }
-}
+// void scanDirsNoRecursive(const std::wstring& rootPath, std::vector<std::wstring>& ret)
+// {
+//         namespace fs = boost::filesystem;
+//         boost::filesystem::path myPath(rootPath);
+//         if (!fs::exists(rootPath)) { return; }
+//         boost::filesystem::directory_iterator endIter;
+//         for (boost::filesystem::directory_iterator iter(myPath); iter != endIter; iter++) {
+//                 if (boost::filesystem::is_directory(*iter)) {
+//                         ret.push_back(iter->path().wstring());
+//                 }
+//         }
+// }
 
 void scanFilesUseRecursive(
         const std::wstring& rootPath,

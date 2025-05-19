@@ -10,6 +10,14 @@ endif()
 
 add_compile_options(-Wno-maybe-uninitialized -Wno-unknown-warning-option -Wno-enum-constexpr-conversion)
 
+add_custom_target(boost
+  test -d boost ||
+  (cp -r ${CMAKE_CURRENT_SOURCE_DIR}/boost_1_78_0 boost &&
+  cd boost && ./bootstrap.sh &&
+  ./b2 link=static runtime-link=static --without-python)
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+)
+
 message("CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(BUILD_SHARED_LIBS OFF) # So that it is portable across linuxes.
@@ -301,6 +309,7 @@ endif()
 
 # lsp
 add_library(lspcpp STATIC)
+add_dependencies(lspcpp boost)
 
 ### Includes
 target_include_directories(lspcpp
@@ -311,7 +320,9 @@ target_include_directories(lspcpp
             ${Uri_SOURCE_DIR}/include
         )
 
-target_link_libraries(lspcpp PUBLIC network-uri  ${Boost_LIBRARIES})
+target_include_directories(lspcpp PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/boost)
+target_link_directories(lspcpp PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/boost/stage/lib)
+target_link_libraries(lspcpp PUBLIC network-uri boost_filesystem)
 
 set(LSPCPP_THIRD_PARTY_DIR_LIST
         ${LSPCPP_THIRD_PARTY_DIR}/utfcpp/source
