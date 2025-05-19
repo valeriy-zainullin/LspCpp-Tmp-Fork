@@ -8,6 +8,22 @@ if(POLICY CMP0054)
     cmake_policy(SET CMP0054 NEW)
 endif()
 
+message("CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(BUILD_SHARED_LIBS OFF) # So that it is portable across linuxes.
+    if(WIN32 AND MSVC)
+        set(CMAKE_FIND_LIBRARY_SUFFIXES .lib)
+    else()
+        set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
+        add_compile_options(-static)
+        add_link_options(-static)
+    endif()
+else()
+    add_compile_options(-fsanitize=address,undefined)
+    add_link_options(-fsanitize=address,undefined)
+endif()
+
+
 set(LIB_MAJOR_VERSION "1")
 set(LIB_MINOR_VERSION "0")
 set(LIB_PATCH_VERSION "0")
@@ -225,9 +241,7 @@ endfunction()
 
 # Libraries
 
-if (MSVC)
-    set(Uri_USE_STATIC_CRT OFF)
-endif()
+set(Uri_USE_STATIC_CRT ON)
 set(Uri_BUILD_TESTS OFF)
 add_subdirectory(third_party/uri)
 
