@@ -506,36 +506,36 @@ lsPosition CharPos(const  std::string& search,
         return result;
 }
 
-// void scanDirsUseRecursive(const std::wstring& rootPath, std::vector<std::wstring>& ret)
-// {
-//         namespace fs = boost::filesystem;
-//         fs::path fullpath(rootPath);
-//         if (!fs::exists(fullpath)) { return; }
-//         fs::recursive_directory_iterator end_iter;
-//         for (fs::recursive_directory_iterator iter(fullpath); iter != end_iter; iter++) {
-//                 try {
-//                         if (fs::is_directory(*iter)) {
-//                                 ret.push_back(iter->path().wstring());
-//                         }
-//                 }
-//                 catch (const std::exception&) {
-//                         continue;
-//                 }
-//         }
-// }
+void scanDirsUseRecursive(const std::wstring& rootPath, std::vector<std::wstring>& ret)
+{
+        namespace fs = boost::filesystem;
+        fs::path fullpath(rootPath);
+        if (!fs::exists(fullpath)) { return; }
+        fs::recursive_directory_iterator end_iter;
+        for (fs::recursive_directory_iterator iter(fullpath); iter != end_iter; iter++) {
+                try {
+                        if (fs::is_directory(*iter)) {
+                                ret.push_back(iter->path().wstring());
+                        }
+                }
+                catch (const std::exception&) {
+                        continue;
+                }
+        }
+}
 
-// void scanDirsNoRecursive(const std::wstring& rootPath, std::vector<std::wstring>& ret)
-// {
-//         namespace fs = boost::filesystem;
-//         boost::filesystem::path myPath(rootPath);
-//         if (!fs::exists(rootPath)) { return; }
-//         boost::filesystem::directory_iterator endIter;
-//         for (boost::filesystem::directory_iterator iter(myPath); iter != endIter; iter++) {
-//                 if (boost::filesystem::is_directory(*iter)) {
-//                         ret.push_back(iter->path().wstring());
-//                 }
-//         }
-// }
+void scanDirsNoRecursive(const std::wstring& rootPath, std::vector<std::wstring>& ret)
+{
+        namespace fs = boost::filesystem;
+        boost::filesystem::path myPath(rootPath);
+        if (!fs::exists(rootPath)) { return; }
+        boost::filesystem::directory_iterator endIter;
+        for (boost::filesystem::directory_iterator iter(myPath); iter != endIter; iter++) {
+                if (boost::filesystem::is_directory(*iter)) {
+                        ret.push_back(iter->path().wstring());
+                }
+        }
+}
 
 void scanFilesUseRecursive(
         const std::wstring& rootPath,

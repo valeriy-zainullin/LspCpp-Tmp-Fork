@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 
+# include/LibLsp/lsp/Markup/string_ref.h:1015 required _stricmp, which is non-standard.
+#   https://stackoverflow.com/a/6312370
+if(CMAKE_CXX_COMPILER STREQUAL "GNU")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++17")
+endif()
+
 if(POLICY CMP0025)
     # detect Apple's Clang
     cmake_policy(SET CMP0025 NEW)
@@ -10,13 +16,50 @@ endif()
 
 add_compile_options(-Wno-maybe-uninitialized -Wno-unknown-warning-option -Wno-enum-constexpr-conversion)
 
-add_custom_target(boost
-  test -d boost ||
-  (cp -r ${CMAKE_CURRENT_SOURCE_DIR}/boost_1_78_0 boost &&
-  cd boost && ./bootstrap.sh &&
-  ./b2 link=static runtime-link=static --without-python)
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-)
+if(WIN32 AND CROSS_COMPILING_ON_LINUX)
+  # https://stackoverflow.com/questions/5411282/cross-compiling-boost-for-windows-on-linux
+  # https://stackoverflow.com/a/60238549
+  # https://stackoverflow.com/a/11907834
+  # https://github.com/jw3/example-cmake-boost-cross
+  # https://gitlab.com/lkkmpn/boost-mingw
+  # https://gitlab.com/lkkmpn/boost-mingw/-/blob/main/.gitlab-ci.yml?ref_type=heads#L73 <-
+  add_custom_target(boost
+    test -d boost ||
+    (cp -r ${CMAKE_CURRENT_SOURCE_DIR}/boost_1_78_0 boost &&
+    cd boost &&
+    # Скрипты b2 (системы сборки boost), видимо, ожидают, что компилятор mingw называется
+    #   тоже g++... И оттуда определяет, что за toolchain, mingw ли. Чтож, дадим mingw.
+    #   Ппц.. Не смотря на все инструкции с toolset=gcc-mingw, это просто не работает..
+    #   Даже это написано в оригинальной документации, под эту же версию.
+    #   https://www.boost.org/doc/libs/1_78_0/tools/build/doc/html/index.html#bbv2.tasks.crosscompile
+    #   Почитай исходный код, называется. :(
+    ln -s /usr/bin/x86_64-w64-mingw32-g++ g++ &&
+    ./bootstrap.sh &&
+    export PATH=$$(pwd):"$$PATH" &&
+    ./b2
+      --with-chrono
+      --with-date_time
+      --with-filesystem
+      --with-program_options
+      --with-system
+      --with-thread
+      target-os=windows
+      address-model=64
+      variant=release
+      link=static
+      runtime-link=static)
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )
+else()
+  add_custom_target(boost
+    test -d boost ||
+    (cp -r ${CMAKE_CURRENT_SOURCE_DIR}/boost_1_78_0 boost &&
+    cd boost &&
+    ./bootstrap.sh &&
+    ./b2 link=static runtime-link=static $(test if ${WIN32} ) --without-python)
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )
+endif()
 
 message("CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -337,6 +380,24 @@ foreach(include_dir  ${LSPCPP_THIRD_PARTY_DIR_LIST})
         target_include_directories(lspcpp SYSTEM PRIVATE ${include_dir})
     endif()
 endforeach()
+
+# Fix wrong case, if cross-compiling for windows
+if(WIN32 AND CROSS_COMPILING_ON_LINUX)
+  set(mingw_header_path /usr/x86_64-w64-mingw32/include)
+  add_custom_target(fix_header_names_casing
+    rm -rf fix_name_casing_for_headers &&
+    mkdir fix_name_casing_for_headers &&
+    cp ${mingw_header_path}/windows.h fix_name_casing_for_headers/Windows.h
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )
+  target_include_directories(lspcpp PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/fix_name_casing_for_headers)
+  add_dependencies(lspcpp fix_header_names_casing)
+endif()
+
+# Fix compilation with mingw. Undefined references to bcrypt functions.
+if(WIN32 AND CROSS_COMPILING_ON_LINUX)
+  target_link_libraries(lspcpp PRIVATE bcrypt)
+endif()
 
 ### Sources
 set(JSONRPC_LIST

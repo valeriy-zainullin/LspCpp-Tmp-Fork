@@ -2,6 +2,7 @@
 #pragma once
 #include <algorithm>
 #include <string>
+#include <string.h> // _stricmp on mingw-w64 defined here.
 #include <vector>
 #include <stdarg.h>
 #include<functional>
