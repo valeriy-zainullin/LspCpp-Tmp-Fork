@@ -56,7 +56,15 @@ else()
     (cp -r ${CMAKE_CURRENT_SOURCE_DIR}/boost_1_78_0 boost &&
     cd boost &&
     ./bootstrap.sh &&
-    ./b2 link=static runtime-link=static $(test if ${WIN32} ) --without-python)
+    ./b2
+      --with-chrono
+      --with-date_time
+      --with-filesystem
+      --with-program_options
+      --with-system
+      --with-thread
+      link=static
+      runtime-link=static)
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
   )
 endif()
