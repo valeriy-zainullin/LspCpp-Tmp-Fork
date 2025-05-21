@@ -14,7 +14,7 @@ if(POLICY CMP0054)
     cmake_policy(SET CMP0054 NEW)
 endif()
 
-add_compile_options(-Wno-maybe-uninitialized -Wno-unknown-warning-option -Wno-enum-constexpr-conversion)
+add_compile_options(-Wno-maybe-uninitialized -Wno-unknown-warning-option -Wno-enum-constexpr-conversion -Wno-c++11-narrowing)
 
 if(WIN32 AND CROSS_COMPILING_ON_LINUX)
   # https://stackoverflow.com/questions/5411282/cross-compiling-boost-for-windows-on-linux
