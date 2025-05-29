@@ -73,8 +73,8 @@ endif()
 #   https://stackoverflow.com/a/62281145
 #   https://stackoverflow.com/a/64287929
 if(WIN32)
-  add_compile_options(-Wa,-mbig-obj -Wl,--oformat,pe-bigobj-x86-64)
-  add_link_options(-Wa,-mbig-obj -Wl,--oformat,pe-bigobj-x86-64)
+  add_compile_options(-m64 -Wa,-mbig-obj)
+  add_link_options(-m64 -Wa,-mbig-obj)
 endif()
 
 message("CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
@@ -398,8 +398,8 @@ foreach(include_dir  ${LSPCPP_THIRD_PARTY_DIR_LIST})
 endforeach()
 
 # Fix wrong case, if cross-compiling for windows
-if(WIN32 AND CROSS_COMPILING_ON_LINUX)
-  set(mingw_header_path /usr/x86_64-w64-mingw32/include)
+set(mingw_header_path /usr/x86_64-w64-mingw32/include)
+if(WIN32 AND EXISTS ${mingw_header_path}/include/windows.h)
   add_custom_target(fix_header_names_casing
     rm -rf fix_name_casing_for_headers &&
     mkdir fix_name_casing_for_headers &&
