@@ -398,12 +398,13 @@ foreach(include_dir  ${LSPCPP_THIRD_PARTY_DIR_LIST})
 endforeach()
 
 # Fix wrong case, if cross-compiling for windows
-set(mingw_header_path /usr/x86_64-w64-mingw32/include)
-if(WIN32 AND EXISTS ${mingw_header_path}/include/windows.h)
+set(mingw_sysroot /usr/x86_64-w64-mingw32)
+if(WIN32 AND EXISTS ${mingw_sysroot}/include/windows.h)
   add_custom_target(fix_header_names_casing
-    rm -rf fix_name_casing_for_headers &&
-    mkdir fix_name_casing_for_headers &&
-    cp ${mingw_header_path}/windows.h fix_name_casing_for_headers/Windows.h
+    [ -d fix_name_casing_for_headers ] || (
+      mkdir fix_name_casing_for_headers &&
+      cp ${mingw_sysroot}/include/windows.h fix_name_casing_for_headers/Windows.h
+    )
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
   )
   target_include_directories(lspcpp PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/fix_name_casing_for_headers)
